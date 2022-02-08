@@ -2,10 +2,12 @@
 
 namespace App\FileSystem;
 
+use App\Services\Config\Objects\Package;
+
 class FileSystemHelper
 {
 
-    public function getDirContents($dir, string $packageName, &$results = [])
+    public function getOriginDirContents(string $dir, string $packageName, &$results = [])
     {
         $files = scandir($dir);
 
@@ -16,9 +18,28 @@ class FileSystemHelper
                 $storePath = str_replace($this->getDirectoryNameByPackageName($packageName) . DIRECTORY_SEPARATOR, '', $storePath);
                 $results[$storePath] = $storePath;
             } else if ($value != "." && $value != "..") {
-                $this->getDirContents($path, $packageName, $results);
+                $this->getOriginDirContents($path, $packageName, $results);
                 $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
                 $storePath = str_replace($this->getDirectoryNameByPackageName($packageName) . DIRECTORY_SEPARATOR, '', $storePath);
+                $results[$storePath] = $storePath;
+            }
+        }
+
+        return $results;
+    }
+
+    public function getDestinationDirContents(string $dir, &$results = [])
+    {
+        $files = scandir($dir);
+
+        foreach ($files as $value) {
+            $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+            if (!is_dir($path)) {
+                $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+                $results[$storePath] = $storePath;
+            } else if ($value != "." && $value != "..") {
+                $this->getOriginDirContents($path, $results);
+                $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
                 $results[$storePath] = $storePath;
             }
         }
@@ -36,27 +57,54 @@ class FileSystemHelper
     public function copyFilesFromKeyToValue(array $files, string $originPrefix = '')
     {
         foreach ($files as $origin => $destination) {
-            $this->copyFirstToSecond($origin, $destination, $originPrefix);
+            $this->copyFirstToSecond(
+                rtrim($originPrefix, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $origin,
+                $destination
+            );
         }
     }
 
-    public function copyFirstToSecond(string $path1, string $path2, string $originPrefix = '')
+    public function copyFilesFromValueToKey(array $files, string $originPrefix = '')
+    {
+        foreach ($files as $origin => $destination) {
+            $originFileName = rtrim($originPrefix, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $origin;
+            if (file_exists($originFileName)) {
+                unlink($originFileName);
+            }
+            $this->copyFirstToSecond(
+                $destination,
+                rtrim($originPrefix, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $origin
+            );
+        }
+    }
+
+    public function copyFirstToSecond(string $path1, string $path2)
     {
         $path = pathinfo($path2);
         if (!file_exists($path['dirname'])) {
             mkdir($path['dirname'], 0777, true);
         }
-        $firstPath = rtrim($originPrefix, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $path1;
-        if (!is_dir($firstPath)) {
-            if (!copy($firstPath, $path2)) {
+
+        if (!is_dir($path1)) {
+            if (!copy($path1, $path2)) {
                 echo "copy failed \n";
             }
         }
     }
 
+    public function getDestinationFilesByPackagePaths(Package $package)
+    {
+        $files = [];
+        foreach ($package->paths as $path) {
+            $files = array_merge($files, $this->getDestinationDirContents($path->destination));
+        }
+
+        return $files;
+    }
+
     public function getOriginFilesFromPackage(string $packageName)
     {
-        $files = $this->getDirContents(
+        $files = $this->getOriginDirContents(
             base_path(
                 $this->getDirectoryNameByPackageName($packageName)
             ), $packageName

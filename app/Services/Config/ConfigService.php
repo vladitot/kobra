@@ -44,7 +44,6 @@ class ConfigService
 
         foreach ($packageArray['paths'] as $pathArray) {
             $path = new Path();
-            $path->appendFileNamesWithPackageName = $pathArray['appendFileNamesWithPackageName'];
             $path->destination = $pathArray['destination'];
             $path->excludePaths = $pathArray['excludePaths'] ?? [];
             $path->origin = $pathArray['origin'];

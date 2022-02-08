@@ -28,9 +28,6 @@ class FileListsHelper
 
                 ) {
                     $destination = str_replace($path->origin, $path->destination, $destination);
-                    if ($path->appendFileNamesWithPackageName) {
-                        $destination = $this->appendFileWithPackageName($destination, $package->name);
-                    }
                 };
             }
         }
@@ -77,15 +74,32 @@ class FileListsHelper
 
     }
 
-    public function appendFileWithPackageName(string $destination, string $packageName)
+    public function getDestinationFilesArray(Package $package): array
     {
-        $pathInfo = pathinfo($destination);
-        $destination = str_replace($pathInfo['basename'], '', $destination);
-        if (isset($pathInfo['extension'])) {
-            return rtrim($destination, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $pathInfo['filename'] . '-' . $packageName . '.'.$pathInfo['extension'];
-        } else {
-            return rtrim($destination, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $pathInfo['filename'] . '-' . $packageName;
-        }
+        // здесь возвращаем destination=>destination
+        $files = $this->helper->getDestinationFilesByPackagePaths($package);
+        return $files;
+    }
 
+    public function convertDestinationFilesToCombined(array $files, Package $package): array {
+        $resultFiles = [];
+
+        foreach ($package->paths as $path) {
+            foreach ($files as $destination) {
+                if (preg_match('/^'.preg_quote($path->destination).'/', $destination)) {
+                    $resultFiles[str_replace($path->destination, $path->origin, $destination)] = $destination;
+                }
+            }
+
+            foreach ($path->excludePaths as $excludePath) {
+                foreach ($resultFiles as $origin => $destination) {
+                    if (preg_match('/^' . preg_quote($excludePath, '/') . '/', $origin)) {
+                        unset($resultFiles[$origin]);
+                    }
+                }
+            }
+
+        }
+        return $resultFiles;
     }
 }

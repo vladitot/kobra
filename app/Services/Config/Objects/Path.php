@@ -8,6 +8,5 @@ class Path
 {
     public string $origin;
     public string $destination;
-    public bool $appendFileNamesWithPackageName;
     public array $excludePaths;
 }
