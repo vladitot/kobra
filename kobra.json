@@ -1,0 +1,33 @@
+{
+  "customCommands": [
+    {
+      "alias": "compose-help",
+      "command": "docker-compose",
+      "description": "Show docker-compose help"
+    }
+  ],
+  "packages": [
+    {
+      "name": "koel",
+      "type": "git",
+      "url": "git@gitlab.lenta.tech:lentochka/site/php-grpc-echo-service.git",
+      "referneceType": "branch",
+      "referenceName": "master",
+      "paths": [
+        {
+          "origin": "src/innerVendor/lentochka/docker/docker-compose.yml",
+          "destination": "infra/docker-compose/docker-compose.yml.tempalte",
+          "appendFileNamesWithPackageName": false
+        },
+        {
+          "origin": "src/innerVendor/lentochka/docker/",
+          "destination": "infra/images/",
+          "appendFileNamesWithPackageName": false,
+          "exclude": [
+            "src/innerVendor/lentochka/docker/php/apache2/apache2.conf"
+          ]
+        }
+      ]
+    }
+  ]
+}
