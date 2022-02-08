@@ -26,6 +26,12 @@ class FileSystemHelper
         return $results;
     }
 
+    public function removeFilesFromValue(array $files) {
+        foreach ($files as $destination) {
+            $this->removeFile($destination);
+        }
+    }
+
     public function copyFilesFromKeyToValue(array $files, string $originPrefix = '')
     {
         foreach ($files as $origin => $destination) {
@@ -59,6 +65,11 @@ class FileSystemHelper
 
     public function getDirectoryNameByPackageName(string $packageName): string {
         return 'infra-vendor'.DIRECTORY_SEPARATOR.$packageName;
+    }
+
+    private function removeFile($destination)
+    {
+        unlink($destination);
     }
 
 }
