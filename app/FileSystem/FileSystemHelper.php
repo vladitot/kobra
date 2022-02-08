@@ -14,12 +14,12 @@ class FileSystemHelper
         foreach ($files as $value) {
             $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
             if (!is_dir($path)) {
-                $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+                $storePath = str_replace(rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR, '', $path);
                 $storePath = str_replace($this->getDirectoryNameByPackageName($packageName) . DIRECTORY_SEPARATOR, '', $storePath);
                 $results[$storePath] = $storePath;
             } else if ($value != "." && $value != "..") {
                 $this->getOriginDirContents($path, $packageName, $results);
-                $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+                $storePath = str_replace(rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR, '', $path);
                 $storePath = str_replace($this->getDirectoryNameByPackageName($packageName) . DIRECTORY_SEPARATOR, '', $storePath);
                 $results[$storePath] = $storePath;
             }
@@ -38,11 +38,11 @@ class FileSystemHelper
         foreach ($files as $value) {
             $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
             if (!is_dir($path)) {
-                $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+                $storePath = str_replace(rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR, '', $path);
                 $results[$storePath] = $storePath;
             } else if ($value != "." && $value != "..") {
                 $this->getDestinationDirContents($path, $results);
-                $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+                $storePath = str_replace(rtrim(getcwd(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR, '', $path);
                 $results[$storePath] = $storePath;
             }
         }
@@ -110,9 +110,9 @@ class FileSystemHelper
     public function getOriginFilesFromPackage(string $packageName)
     {
         $files = $this->getOriginDirContents(
-            base_path(
-                $this->getDirectoryNameByPackageName($packageName)
-            ), $packageName
+
+                $this->getDirectoryNameByPackageName($packageName),
+                $packageName
         );
         return $files;
     }

@@ -23,7 +23,7 @@ class GitService
 
     public function checkout(string $where, string $packageName) {
         $cmd = 'cd '
-            .base_path($this->helper->getDirectoryNameByPackageName($packageName))
+            .$this->helper->getDirectoryNameByPackageName($packageName)
             .' && git checkout '.$where;
         $process = new Process(explode(' ', $cmd));
         $process->run();

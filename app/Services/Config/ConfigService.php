@@ -12,11 +12,13 @@ class ConfigService
 {
     public function fetchConfig(): Config
     {
-        $json = json_decode(file_get_contents(base_path() . DIRECTORY_SEPARATOR . 'kobra.json'), true);
+        $json = json_decode(file_get_contents('kobra.json'), true);
 
         $config = new Config();
-        foreach ($json['customCommands'] as $command) {
-            $config->addCommand($this->createCustomCommand($command));
+        if (isset($json['customCommands'])) {
+            foreach ($json['customCommands'] as $command) {
+                $config->addCommand($this->createCustomCommand($command));
+            }
         }
 
         foreach ($json['packages'] as $package) {
