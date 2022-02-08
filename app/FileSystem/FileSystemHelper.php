@@ -12,13 +12,13 @@ class FileSystemHelper
         foreach ($files as $value) {
             $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
             if (!is_dir($path)) {
-                $storePath = str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
-                $storePath = str_replace($this->getDirectoryNameByPackageName($packageName).DIRECTORY_SEPARATOR, '', $storePath);
+                $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+                $storePath = str_replace($this->getDirectoryNameByPackageName($packageName) . DIRECTORY_SEPARATOR, '', $storePath);
                 $results[$storePath] = $storePath;
             } else if ($value != "." && $value != "..") {
                 $this->getDirContents($path, $packageName, $results);
-                $storePath = str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
-                $storePath = str_replace($this->getDirectoryNameByPackageName($packageName).DIRECTORY_SEPARATOR, '', $storePath);
+                $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+                $storePath = str_replace($this->getDirectoryNameByPackageName($packageName) . DIRECTORY_SEPARATOR, '', $storePath);
                 $results[$storePath] = $storePath;
             }
         }
@@ -26,9 +26,10 @@ class FileSystemHelper
         return $results;
     }
 
-    public function removeFilesFromValue(array $files) {
+    public function removeFilesFromValue(array $files)
+    {
         foreach ($files as $destination) {
-            $this->removeFile($destination);
+            $this->removePathRecursively($destination);
         }
     }
 
@@ -45,7 +46,7 @@ class FileSystemHelper
         if (!file_exists($path['dirname'])) {
             mkdir($path['dirname'], 0777, true);
         }
-        $firstPath = rtrim($originPrefix, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$path1;
+        $firstPath = rtrim($originPrefix, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $path1;
         if (!is_dir($firstPath)) {
             if (!copy($firstPath, $path2)) {
                 echo "copy failed \n";
@@ -63,13 +64,27 @@ class FileSystemHelper
         return $files;
     }
 
-    public function getDirectoryNameByPackageName(string $packageName): string {
-        return 'infra-vendor'.DIRECTORY_SEPARATOR.$packageName;
+    public function getDirectoryNameByPackageName(string $packageName): string
+    {
+        return 'infra-vendor' . DIRECTORY_SEPARATOR . $packageName;
     }
 
-    private function removeFile($destination)
+
+    private function removePathRecursively($path)
     {
-        unlink($destination);
+        if (!is_dir($path)) {
+            if (file_exists($path)) unlink($path);
+        }
+        $files = glob($path . '/*');
+        foreach ($files as $file) {
+            if (!is_dir($file)) {
+                if (file_exists($path)) unlink($file);
+            } else {
+                $this->removePathRecursively($file);
+            }
+        }
+        if (file_exists($path)) rmdir($path);
+
     }
 
 }
