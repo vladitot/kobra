@@ -38,8 +38,7 @@ class ConfigService
     {
         $package = new Package();
         $package->name = $packageArray['name'];
-        $package->referenceName = $packageArray['referenceName'];
-        $package->referneceType = $packageArray['referenceType'];
+        $package->reference = $packageArray['reference'];
         $package->type = $packageArray['type'];
         $package->url = $packageArray['url'];
 

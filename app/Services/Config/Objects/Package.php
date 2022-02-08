@@ -9,8 +9,7 @@ class Package
     public string $name;
     public string $type;
     public string $url;
-    public string $referneceType;
-    public string $referenceName;
+    public string $reference;
     /** @var Collection|Path[] */
     public Collection $paths;
 

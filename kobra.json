@@ -11,8 +11,7 @@
       "name": "koel",
       "type": "git",
       "url": "git@gitlab.lenta.tech:lentochka/site/php-grpc-echo-service.git",
-      "referenceType": "branch",
-      "referenceName": "master",
+      "reference": "master",
       "paths": [
         {
           "origin": "src/innerVendor/lentochka/docker/docker-compose.yml",

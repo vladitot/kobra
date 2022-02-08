@@ -8,7 +8,7 @@ class Config
 {
 
     /** @var Collection|CustomCommand[] */
-    private Collection $customCommands;
+    public Collection $customCommands;
 
     /** @var Collection|Package[] */
     public Collection $packages;
