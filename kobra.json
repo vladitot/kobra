@@ -15,12 +15,12 @@
       "paths": [
         {
           "origin": "src/innerVendor/lentochka/docker/docker-compose.yml",
-          "destination": "infra/docker-compose/docker-compose.yml.tempalte",
-          "appendFileNamesWithPackageName": false
+          "destination": "infra/docker-compose/docker-compose.yml",
+          "appendFileNamesWithPackageName": true
         },
         {
-          "origin": "src/innerVendor/lentochka/docker/",
-          "destination": "infra/images/",
+          "origin": "src/innerVendor/lentochka/docker/php",
+          "destination": "infra/images/php",
           "appendFileNamesWithPackageName": false,
           "excludePaths": [
             "src/innerVendor/lentochka/docker/php/apache2/apache2.conf"

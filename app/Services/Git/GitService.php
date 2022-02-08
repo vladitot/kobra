@@ -16,7 +16,7 @@ class GitService
     }
 
     public function clone(string $gitUrl, string $packageName) {
-        $cmd = 'git clone '.$gitUrl.' '.$packageName;
+        $cmd = 'git clone '.$gitUrl.' '.$this->helper->getDirectoryNameByPackageName($packageName);
         $process = new Process(explode(' ', $cmd));
         $process->run();
     }
@@ -27,6 +27,8 @@ class GitService
             .' && git checkout '.$where;
         $process = new Process(explode(' ', $cmd));
         $process->run();
+        echo $process->getOutput();
+        echo $process->getErrorOutput();
     }
 
 }

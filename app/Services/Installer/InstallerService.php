@@ -36,7 +36,10 @@ class InstallerService
         $this->gitService->checkout($package->reference, $package->name);
         $originFiles = $this->fileListHelper->getOriginFilesArray($package);
         $originToDestinationFileList = $this->fileListHelper->convertOriginFilesToCombinedPathList($package, $originFiles);
-        $this->fileSystemHelper->copyFilesFromKeyToValue($originToDestinationFileList);
+        $this->fileSystemHelper->copyFilesFromKeyToValue(
+            $originToDestinationFileList,
+            $this->fileSystemHelper->getDirectoryNameByPackageName($package->name)
+        );
     }
 
 

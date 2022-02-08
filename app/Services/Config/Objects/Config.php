@@ -25,7 +25,7 @@ class Config
 
     public function addPackage(Package $package)
     {
-        $this->customCommands->push($package);
+        $this->packages->push($package);
     }
 }
 

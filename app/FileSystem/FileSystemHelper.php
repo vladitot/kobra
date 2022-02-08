@@ -5,38 +5,45 @@ namespace App\FileSystem;
 class FileSystemHelper
 {
 
-    public function getDirContents($dir, &$results = array())
+    public function getDirContents($dir, string $packageName, &$results = [])
     {
         $files = scandir($dir);
 
         foreach ($files as $value) {
             $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
             if (!is_dir($path)) {
-                $results[$path] = $path;
+                $storePath = str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
+                $storePath = str_replace($this->getDirectoryNameByPackageName($packageName).DIRECTORY_SEPARATOR, '', $storePath);
+                $results[$storePath] = $storePath;
             } else if ($value != "." && $value != "..") {
-                $this->getDirContents($path, $results);
-                $results[$path] = $path;
+                $this->getDirContents($path, $packageName, $results);
+                $storePath = str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
+                $storePath = str_replace($this->getDirectoryNameByPackageName($packageName).DIRECTORY_SEPARATOR, '', $storePath);
+                $results[$storePath] = $storePath;
             }
         }
 
         return $results;
     }
 
-    public function copyFilesFromKeyToValue(array $files)
+    public function copyFilesFromKeyToValue(array $files, string $originPrefix = '')
     {
         foreach ($files as $origin => $destination) {
-            $this->copyFirstToSecond($origin, $destination);
+            $this->copyFirstToSecond($origin, $destination, $originPrefix);
         }
     }
 
-    public function copyFirstToSecond($path1, $path2)
+    public function copyFirstToSecond(string $path1, string $path2, string $originPrefix = '')
     {
         $path = pathinfo($path2);
         if (!file_exists($path['dirname'])) {
             mkdir($path['dirname'], 0777, true);
         }
-        if (!copy($path1, $path2)) {
-            echo "copy failed \n";
+        $firstPath = rtrim($originPrefix, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$path1;
+        if (!is_dir($firstPath)) {
+            if (!copy($firstPath, $path2)) {
+                echo "copy failed \n";
+            }
         }
     }
 
@@ -45,13 +52,13 @@ class FileSystemHelper
         $files = $this->getDirContents(
             base_path(
                 $this->getDirectoryNameByPackageName($packageName)
-            )
+            ), $packageName
         );
         return $files;
     }
 
     public function getDirectoryNameByPackageName(string $packageName): string {
-        return 'kobra'.DIRECTORY_SEPARATOR.$packageName;
+        return 'infra-vendor'.DIRECTORY_SEPARATOR.$packageName;
     }
 
 }
