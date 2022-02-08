@@ -30,6 +30,9 @@ class FileSystemHelper
 
     public function getDestinationDirContents(string $dir, &$results = [])
     {
+        if (!is_dir($dir)) {
+            return [$dir=>$dir];
+        }
         $files = scandir($dir);
 
         foreach ($files as $value) {
@@ -38,7 +41,7 @@ class FileSystemHelper
                 $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
                 $results[$storePath] = $storePath;
             } else if ($value != "." && $value != "..") {
-                $this->getOriginDirContents($path, $results);
+                $this->getDestinationDirContents($path, $results);
                 $storePath = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
                 $results[$storePath] = $storePath;
             }
@@ -69,7 +72,9 @@ class FileSystemHelper
         foreach ($files as $origin => $destination) {
             $originFileName = rtrim($originPrefix, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $origin;
             if (file_exists($originFileName)) {
-                unlink($originFileName);
+                if (!is_dir($originFileName)) {
+                    unlink($originFileName);
+                }
             }
             $this->copyFirstToSecond(
                 $destination,
