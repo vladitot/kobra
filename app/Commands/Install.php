@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Services\Config\ConfigService;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
@@ -26,9 +27,11 @@ class Install extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(ConfigService $configService)
     {
-        //
+        $config = $configService->fetchConfig();
+
+        dd($config);
     }
 
     /**

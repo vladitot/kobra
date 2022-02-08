@@ -11,7 +11,7 @@
       "name": "koel",
       "type": "git",
       "url": "git@gitlab.lenta.tech:lentochka/site/php-grpc-echo-service.git",
-      "referneceType": "branch",
+      "referenceType": "branch",
       "referenceName": "master",
       "paths": [
         {
@@ -23,7 +23,7 @@
           "origin": "src/innerVendor/lentochka/docker/",
           "destination": "infra/images/",
           "appendFileNamesWithPackageName": false,
-          "exclude": [
+          "excludePaths": [
             "src/innerVendor/lentochka/docker/php/apache2/apache2.conf"
           ]
         }

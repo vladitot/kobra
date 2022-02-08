@@ -11,6 +11,16 @@ class Package
     public string $url;
     public string $referneceType;
     public string $referenceName;
-    /** @var Collection|Path[]  */
+    /** @var Collection|Path[] */
     public Collection $paths;
+
+    public function __construct()
+    {
+        $this->paths = new Collection();
+    }
+
+    public function addPath(Path $path): void
+    {
+        $this->paths->push($path);
+    }
 }
