@@ -50,6 +50,15 @@ class FileSystemHelper
         return $results;
     }
 
+    public function removeDirectoriesFromFilesToDeleteBeforePush(array $files, Package $package): array {
+        foreach ($files as $origin=>$destination) {
+            if (is_dir(rtrim($this->getDirectoryNameByPackageName($package->name),DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$origin)) {
+                unset ($files[$origin]);
+            }
+        }
+        return $files;
+    }
+
     public function removeFilesFromValue(array $files)
     {
         foreach ($files as $destination) {

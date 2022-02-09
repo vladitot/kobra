@@ -38,6 +38,15 @@ class PusherService
         $destinationFilesKeyedByOrigin = $this->fileListHelper
             ->convertDestinationFilesToCombined($allDestinationFiles, $package);
 
+        $originFiles = $this->fileListHelper->getOriginFilesArray($package);
+        $originToDestinationFileList = $this->fileListHelper->convertOriginFilesToCombinedPathList($package, $originFiles);
+
+        //we need to make arrayDiff, to find if some files were deleted
+        $filesToDelete = array_diff_key($originToDestinationFileList, $destinationFilesKeyedByOrigin);
+        $filesToDelete = $this->fileSystemHelper->removeDirectoriesFromFilesToDeleteBeforePush($filesToDelete, $package);
+
+        $this->fileSystemHelper->removeFilesFromValue($filesToDelete);
+
         $this->fileSystemHelper->copyFilesFromValueToKey(
             $destinationFilesKeyedByOrigin,
             $this->fileSystemHelper->getDirectoryNameByPackageName($package->name)
