@@ -14,7 +14,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'install';
+    protected $signature = 'install {packageName?}';
 
     /**
      * The description of the command.
@@ -31,7 +31,14 @@ class Install extends Command
     public function handle(ConfigService $configService, InstallerService $service)
     {
         $config = $configService->fetchConfig();
+        $packageName = $this->argument('packageName');
         foreach ($config->packages as $package) {
+            if ($packageName) {
+                if ($packageName==$package->name) {
+                    $service->install($package);
+                }
+                continue;
+            }
             $service->install($package);
         }
 

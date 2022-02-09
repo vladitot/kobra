@@ -14,14 +14,14 @@ class Remove extends Command
      *
      * @var string
      */
-    protected $signature = 'remove';
+    protected $signature = 'remove {packageName?}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Remove package files from your project directory';
 
     /**
      * Execute the console command.
@@ -31,7 +31,14 @@ class Remove extends Command
     public function handle(ConfigService $configService, RemoverService $remover)
     {
         $config = $configService->fetchConfig();
+        $packageName = $this->argument('packageName');
         foreach ($config->packages as $package) {
+            if ($packageName) {
+                if ($packageName==$package->name) {
+                    $remover->remove($package);
+                }
+                continue;
+            }
             $remover->remove($package);
         }
         return 0;

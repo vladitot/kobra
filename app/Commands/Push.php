@@ -15,7 +15,7 @@ class Push extends Command
      *
      * @var string
      */
-    protected $signature = 'push';
+    protected $signature = 'push {packageName?}';
 
     /**
      * The description of the command.
@@ -32,7 +32,14 @@ class Push extends Command
     public function handle(ConfigService $configService, PusherService $pusherService)
     {
         $config = $configService->fetchConfig();
+        $packageName = $this->argument('packageName');
         foreach ($config->packages as $package) {
+            if ($packageName) {
+                if ($packageName==$package->name) {
+                    $pusherService->push($package);
+                }
+                continue;
+            }
             $pusherService->push($package);
         }
         return 0;
