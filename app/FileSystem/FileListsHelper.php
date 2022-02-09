@@ -21,28 +21,21 @@ class FileListsHelper
     {
         foreach ($package->paths as $path) {
             foreach ($files as $origin=>&$destination) {
+
+                if (ltrim($path->origin, DIRECTORY_SEPARATOR)=='') {
+                    $destination = rtrim($path->destination, DIRECTORY_SEPARATOR)
+                        .DIRECTORY_SEPARATOR
+                        .ltrim($origin,DIRECTORY_SEPARATOR);
+                    continue;
+                }
+
                 if (
                     $path->origin==$origin
                     ||
                     preg_match('/^'.preg_quote($path->origin, '/').'\//', $origin)
-
                 ) {
-                    $destination = str_replace($path->origin, $path->destination, $destination);
+                        $destination = str_replace($path->origin, $path->destination, $destination);
                 };
-            }
-        }
-        return $files;
-    }
-
-    /**
-     * сконвертируем список файлов в список origin=>destination
-     * но для обратной процедуры (че там push или load)
-     */
-    private function convertDestinationFilesToCombinedPathList(Package $package, array $files): array
-    {
-        foreach ($package->paths as $path) {
-            foreach ($files as &$destination) {
-                $destination = str_replace($path->origin, $path->destination, $destination);
             }
         }
         return $files;
@@ -55,10 +48,23 @@ class FileListsHelper
         //а destination относительно корня проекта (нашего)
         $files = $this->helper->getOriginFilesFromPackage($package->name);
         $resultFiles = [];
+
+        //если видим origin="" то надо добавить все файлы
+        $allFiles = false;
         foreach ($package->paths as $path) {
-            foreach ($files as $origin => $destination) {
-                if (preg_match('/^' . preg_quote($path->origin, '/') . '/', $origin)) {
-                    $resultFiles[$origin] = $destination;
+            if (trim($path->origin, DIRECTORY_SEPARATOR)=='') {
+                $resultFiles = $files;
+                $allFiles=true;
+                break;
+            }
+        }
+
+        foreach ($package->paths as $path) {
+            if (!$allFiles) {
+                foreach ($files as $origin => $destination) {
+                    if (preg_match('/^' . preg_quote($path->origin, '/') . '/', $origin)) {
+                        $resultFiles[$origin] = $destination;
+                    }
                 }
             }
 
@@ -83,7 +89,6 @@ class FileListsHelper
 
     public function convertDestinationFilesToCombined(array $files, Package $package): array {
         $resultFiles = [];
-
         foreach ($package->paths as $path) {
             foreach ($files as $destination) {
                 if (preg_match('/^'.preg_quote($path->destination, '/').'/', $destination)) {
