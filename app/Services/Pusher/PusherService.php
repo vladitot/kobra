@@ -43,10 +43,8 @@ class PusherService
 
         //we need to make arrayDiff, to find if some files were deleted
         $filesToDelete = array_diff_key($originToDestinationFileList, $destinationFilesKeyedByOrigin);
-        $filesToDelete = $this->fileSystemHelper->removeDirectoriesFromFilesToDeleteBeforePush($filesToDelete, $package);
-
-        $this->fileSystemHelper->removeFilesFromValue($filesToDelete);
-
+        $filesToDelete = $this->fileSystemHelper->prepareOriginFilesToDeletion($filesToDelete, $package);
+        $this->fileSystemHelper->removeFilesFromKey($filesToDelete);
         $this->fileSystemHelper->copyFilesFromValueToKey(
             $destinationFilesKeyedByOrigin,
             $this->fileSystemHelper->getDirectoryNameByPackageName($package->name)

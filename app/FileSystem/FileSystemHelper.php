@@ -50,19 +50,33 @@ class FileSystemHelper
         return $results;
     }
 
-    public function removeDirectoriesFromFilesToDeleteBeforePush(array $files, Package $package): array {
+    public function prepareOriginFilesToDeletion(array $files, Package $package): array {
         foreach ($files as $origin=>$destination) {
             if (is_dir(rtrim($this->getDirectoryNameByPackageName($package->name),DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$origin)) {
                 unset ($files[$origin]);
             }
         }
-        return $files;
+
+        $result = [];
+        foreach ($files as $origin=>$destination) {
+            $newOrigin=rtrim($this->getDirectoryNameByPackageName($package->name),DIRECTORY_SEPARATOR)
+                .DIRECTORY_SEPARATOR.$origin;
+            $result[$newOrigin] = $destination;
+        }
+        return $result;
     }
 
     public function removeFilesFromValue(array $files)
     {
         foreach ($files as $destination) {
             $this->removePathRecursively($destination);
+        }
+    }
+
+    public function removeFilesFromKey(array $files)
+    {
+        foreach ($files as $origin=>$destination) {
+            $this->removePathRecursively($origin);
         }
     }
 
