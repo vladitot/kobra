@@ -127,13 +127,16 @@ class FileSystemHelper
     {
         if (!is_dir($path)) {
             if (file_exists($path)) unlink($path);
+            return;
         }
-        $files = glob($path . '/*');
+        $files = scandir($path);
         foreach ($files as $file) {
             if (!is_dir($file)) {
                 if (file_exists($path)) unlink($file);
             } else {
-                $this->removePathRecursively($file);
+                if ($file!='.' && $file!='..') {
+                    $this->removePathRecursively($file);
+                }
             }
         }
         if (file_exists($path)) rmdir($path);
