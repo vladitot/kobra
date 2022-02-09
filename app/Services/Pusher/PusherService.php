@@ -4,6 +4,7 @@ namespace App\Services\Pusher;
 
 use App\FileSystem\FileListsHelper;
 use App\FileSystem\FileSystemHelper;
+use App\Services\Config\Objects\Package;
 use App\Services\Git\GitService;
 
 class PusherService
@@ -20,8 +21,16 @@ class PusherService
         $this->fileListHelper = $fileListHelper;
     }
 
-    public function push($package)
+    /**
+     * Could used only with git
+     * @param $package
+     * @return void
+     */
+    public function push(Package $package, bool $pushToRepository = false)
     {
+        if ($package->type!='git') {
+            return;
+        }
         $this->gitService->clone($package->url, $package->name);
         $this->gitService->checkout($package->reference, $package->name);
         $allDestinationFiles = $this->fileListHelper->getDestinationFilesArray($package);
@@ -33,5 +42,9 @@ class PusherService
             $destinationFilesKeyedByOrigin,
             $this->fileSystemHelper->getDirectoryNameByPackageName($package->name)
         );
+
+        if ($pushToRepository) {
+            $this->gitService->pushPackageToRepository($package->name);
+        }
     }
 }
