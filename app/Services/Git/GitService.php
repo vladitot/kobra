@@ -47,9 +47,10 @@ class GitService
         $commands = [
             'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard HEAD',
             'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git fetch --all',
-            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout -B '.$where,
-            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git branch --set-upstream-to=origin/'.$where.' '.$where,
-            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard origin/'.$where,
+//            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git switch -c '.$where.' --track origin/'.$where,
+            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout -B '.$where.' origin/'.$where,
+//            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git push --set-upstream origin '.$where,
+//            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard origin/'.$where,
             ];
         $this->runCommands($commands);
     }

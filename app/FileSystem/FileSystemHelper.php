@@ -141,7 +141,7 @@ class FileSystemHelper
 
     public function getDirectoryNameByPackageName(string $packageName): string
     {
-        return 'infra-vendor' . DIRECTORY_SEPARATOR . $packageName;
+        return $_SERVER['HOME'] . DIRECTORY_SEPARATOR . $packageName;
     }
 
 

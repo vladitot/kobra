@@ -50,7 +50,7 @@ class PusherService
         );
 
         if ($pushToRepository) {
-            $this->gitService->pushPackageToRepository($package->name);
+            $this->gitService->pushPackageToRepository($package->name, $package->reference);
         }
     }
 }
