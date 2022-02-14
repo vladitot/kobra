@@ -24,29 +24,44 @@ class GitService
         echo $process->getErrorOutput();
         if ($process->getExitCode()!=0) {
             echo "Trying to make git pull...\n";
-            $cmd = 'cd '
-                .$this->helper->getDirectoryNameByPackageName($packageName)
-                .' && git fetch --all && git pull';
-            $result = shell_exec($cmd);
+            $commands = [
+                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard HEAD',
+                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git clean -fd',
+                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git fetch --all',
+                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout master',
+                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard origin/master',
+            ];
+
+            $this->runCommands($commands);
+        }
+    }
+
+    public function runCommands(array $commands) {
+        foreach ($commands as $command) {
+            $result = shell_exec($command);
             echo $result;
         }
     }
 
     public function checkout(string $where, string $packageName) {
-        $cmd = 'cd '
-            .$this->helper->getDirectoryNameByPackageName($packageName)
-            .' && git fetch --all && git checkout '.$where. ' && git pull';
-        $result = shell_exec($cmd);
-        echo $result;
+        $commands = [
+            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard HEAD',
+            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git fetch --all',
+            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout -B '.$where,
+            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git branch --set-upstream-to=origin/'.$where.' '.$where,
+            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard origin/'.$where,
+            ];
+        $this->runCommands($commands);
     }
 
     public function pushPackageToRepository(string $packageName)
     {
-        $cmd = 'cd '
-            .$this->helper->getDirectoryNameByPackageName($packageName)
-            .' && git add . && git commit -m "automated kobra push" && git push';
-        $result = shell_exec($cmd);
-        echo $result;
+        $commands =[
+            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git add .',
+            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git commit -m "automated kobra push"',
+            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git push',
+        ];
+        $this->runCommands($commands);
     }
 
 }

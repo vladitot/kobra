@@ -34,7 +34,6 @@ class PusherService
         $this->gitService->clone($package->url, $package->name);
         $this->gitService->checkout($package->reference, $package->name);
         $allDestinationFiles = $this->fileListHelper->getDestinationFilesArray($package);
-
         $destinationFilesKeyedByOrigin = $this->fileListHelper
             ->convertDestinationFilesToCombined($allDestinationFiles, $package);
 

@@ -92,7 +92,8 @@ class FileListsHelper
         foreach ($package->paths as $path) {
             foreach ($files as $destination) {
                 if (preg_match('/^'.preg_quote($path->destination, '/').'/', $destination)) {
-                    $resultFiles[str_replace($path->destination, $path->origin, $destination)] = $destination;
+                    $key = ltrim(str_replace($path->destination, $path->origin, $destination), DIRECTORY_SEPARATOR);
+                    $resultFiles[$key] = $destination;
                 }
             }
 

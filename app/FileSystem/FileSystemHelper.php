@@ -126,7 +126,6 @@ class FileSystemHelper
         foreach ($package->paths as $path) {
             $files = array_merge($files, $this->getDestinationDirContents($path->destination));
         }
-
         return $files;
     }
 
