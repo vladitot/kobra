@@ -45,22 +45,25 @@ class GitService
 
     public function checkout(string $where, string $packageName) {
         $commands = [
-            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard HEAD',
-            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git fetch --all',
-//            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git switch -c '.$where.' --track origin/'.$where,
-            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout -B '.$where.' origin/'.$where,
-//            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git push --set-upstream origin '.$where,
-//            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard origin/'.$where,
+                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard HEAD',
+                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git fetch --all'
             ];
+            if (preg_match('/^v\d+\.\d+\.\d+/', $where)) {
+                $commands[]='cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout '.$where;;
+            } else {
+                $commands[]='cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout -B '.$where.' origin/'.$where;
+            }
+
         $this->runCommands($commands);
     }
 
-    public function pushPackageToRepository(string $packageName)
+    public function pushPackageToRepository(string $packageName, string $where)
     {
         $commands =[
             'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git add .',
             'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git commit -m "automated kobra push"',
-            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git push',
+
+            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' &&  git push --set-upstream origin '.$where,
         ];
         $this->runCommands($commands);
     }
