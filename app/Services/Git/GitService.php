@@ -46,12 +46,14 @@ class GitService
     public function checkout(string $where, string $packageName) {
         $commands = [
                 'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard HEAD',
+                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git clean -fn',
                 'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git fetch --all'
             ];
             if (preg_match('/^v\d+\.\d+\.\d+/', $where)) {
                 $commands[]='cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout '.$where;;
             } else {
-                $commands[]='cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout -B '.$where.' origin/'.$where;
+                $commands[]='cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout -b '.$where;
+                $commands[]='cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git pull '.$where. ' || true';
             }
 
         $this->runCommands($commands);
