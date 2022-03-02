@@ -17,8 +17,9 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "laravel-zero/framework": "^8.8",
-        "ext-json": "*"
+        "ext-json": "*",
+        "czproject/git-php": "^4.0",
+        "laravel-zero/framework": "^8.8"
     },
     "require-dev": {
         "mockery/mockery": "^1.4.3",

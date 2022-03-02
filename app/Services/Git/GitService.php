@@ -9,10 +9,12 @@ class GitService
 {
 
     private FileSystemHelper $helper;
+    private \CzProject\GitPhp\Git $gitManager;
 
-    public function __construct(FileSystemHelper $helper)
+    public function __construct(FileSystemHelper $helper, \CzProject\GitPhp\Git $gitManager)
     {
         $this->helper = $helper;
+        $this->gitManager = $gitManager;
     }
 
     public function clone(string $gitUrl, string $packageName) {
@@ -43,31 +45,40 @@ class GitService
         }
     }
 
+    /**
+     * @throws \CzProject\GitPhp\GitException
+     */
     public function checkout(string $where, string $packageName) {
-        $commands = [
-                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git reset --hard HEAD',
-                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git clean -fn',
-                'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git fetch --all'
-            ];
-            if (preg_match('/^v\d+\.\d+\.\d+/', $where)) {
-                $commands[]='cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout '.$where;;
-            } else {
-                $commands[]='cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git checkout -b '.$where;
-                $commands[]='cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git pull '.$where. ' || true';
-            }
+        $repo = $this->gitManager->open($this->helper->getDirectoryNameByPackageName($packageName));
+        $repo->execute('reset', '--hard', 'HEAD');
+        $repo->execute('clean', '-fn');
+        $repo->fetch();
 
-        $this->runCommands($commands);
+        if (preg_match('/^v\d+\.\d+\.\d+/', $where)) {
+            $repo->checkout($where);
+            return;
+        }
+
+        $branches = $repo->getRemoteBranches();
+        $originWhere = 'origin/'.$where;
+        if (in_array($originWhere, $branches)) {
+            $repo->checkout($where);
+            $repo->execute('reset', '--hard', $originWhere);
+        } else {
+            $repo->checkout('master');
+            $repo->createBranch($where, true);
+        }
     }
 
+    /**
+     * @throws \CzProject\GitPhp\GitException
+     */
     public function pushPackageToRepository(string $packageName, string $where)
     {
-        $commands =[
-            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git add .',
-            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' && git commit -m "automated kobra push"',
-
-            'cd ' .$this->helper->getDirectoryNameByPackageName($packageName).' &&  git push --set-upstream origin '.$where,
-        ];
-        $this->runCommands($commands);
+        $repo = $this->gitManager->open($this->helper->getDirectoryNameByPackageName($packageName));
+        $repo->addAllChanges();
+        $repo->commit("automated kobra push");
+        $repo->push('origin', [$where]);
     }
 
 }
