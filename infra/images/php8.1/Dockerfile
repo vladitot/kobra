@@ -31,50 +31,35 @@ RUN apt-get update && apt-get install -y gcc make g++ curl \
 
 #COPY blackfire.ini /usr/local/etc/php/conf.d/zz-blackfire.ini
 
-RUN docker-php-ext-configure intl \
-    && docker-php-ext-configure pdo \
-    && docker-php-ext-configure pdo_mysql \
-    && docker-php-ext-configure pdo_pgsql \
-    && docker-php-ext-configure phar \
+RUN docker-php-ext-configure phar \
     && docker-php-ext-configure xml \
     && docker-php-ext-configure curl \
     && docker-php-ext-configure mbstring \
     && docker-php-ext-configure opcache \
     && docker-php-ext-configure zip \
-    && docker-php-ext-configure gd \
     && docker-php-ext-configure bcmath \
-    && docker-php-ext-configure soap \
-    && docker-php-ext-configure pcntl \
     && docker-php-ext-configure calendar \
     && docker-php-ext-configure sockets \
-    && docker-php-ext-configure mysqli \
-    && docker-php-ext-configure pgsql \
 #######
-    && docker-php-ext-install intl \
-    && docker-php-ext-install pdo \
-    && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install pdo_pgsql \
     && docker-php-ext-install phar \
     && docker-php-ext-install xml \
     && docker-php-ext-install curl \
     && docker-php-ext-install mbstring \
     && docker-php-ext-install opcache \
     && docker-php-ext-install zip \
-    && docker-php-ext-install gd \
     && docker-php-ext-install bcmath \
-    && docker-php-ext-install soap \
-    && docker-php-ext-install pcntl \
     && docker-php-ext-install calendar \
-    && docker-php-ext-install sockets \
-    && docker-php-ext-install mysqli \
-    && docker-php-ext-install pgsql
+    && docker-php-ext-install sockets
 
 #RUN pecl update-channels && pecl install grpc
 #RUN docker-php-ext-enable grpc
+RUN apt-get update && apt-get install -y libyaml-dev
+RUN pecl update-channels && pecl install yaml
+RUN docker-php-ext-enable yaml
 
-RUN pecl update-channels && pecl install -o -f redis pcov \
-    &&  rm -rf /tmp/pear \
-    &&  docker-php-ext-enable redis pcov
+#RUN pecl update-channels && pecl install -o -f redis pcov  \
+#    &&  rm -rf /tmp/pear \
+#    &&  docker-php-ext-enable redis pcov
 
 
 ENV PATH $PATH:/var/www/vendor/bin:/var/www/bin

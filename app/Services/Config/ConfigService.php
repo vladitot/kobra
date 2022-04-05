@@ -12,16 +12,17 @@ class ConfigService
 {
     public function fetchConfig(): Config
     {
-        $json = json_decode(file_get_contents('kobra.json'), true);
+//        $configArray = json_decode(file_get_contents('kobra.json'), true);
+        $configArray = yaml_parse_file('kobra.yml');
 
         $config = new Config();
-        if (isset($json['customCommands'])) {
-            foreach ($json['customCommands'] as $command) {
+        if (isset($configArray['customCommands'])) {
+            foreach ($configArray['customCommands'] as $command) {
                 $config->addCommand($this->createCustomCommand($command));
             }
         }
 
-        foreach ($json['packages'] as $package) {
+        foreach ($configArray['packages'] as $package) {
             $config->addPackage($this->createPackage($package));
         }
         return $config;
@@ -43,7 +44,6 @@ class ConfigService
         $package->reference = $packageArray['reference'];
         $package->type = $packageArray['type'];
         $package->url = $packageArray['url'];
-
         foreach ($packageArray['paths'] as $destinationPack) {
             foreach ($destinationPack as $originLeft=>$destinationRight) {
                 $path = new Path();

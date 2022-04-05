@@ -1,0 +1,10 @@
+packages:
+  - name: koel
+    type: git
+    url: git@gitlab.lenta.tech:lentochka/site/php-grpc-echo-service.git
+    reference: master
+    paths:
+      - src/innerVendor/lentochka/docker/docker-compose.yml: infra/docker-compose/docker-compose.yml
+#        src/innerVendor/lentochka/docker/docker-compose1.yml: infra/docker-compose/docker-compose1.yml
+        excludePaths:
+          - src/innerVendor/lentochka/docker/php/apache2/apache2.conf

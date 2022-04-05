@@ -19,7 +19,8 @@
         "php": "^7.4|^8.0",
         "ext-json": "*",
         "czproject/git-php": "^4.0",
-        "laravel-zero/framework": "^8.8"
+        "laravel-zero/framework": "^8.8",
+      "ext-yaml": "*"
     },
     "require-dev": {
         "mockery/mockery": "^1.4.3",
