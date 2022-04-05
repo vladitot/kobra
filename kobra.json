@@ -1,30 +1,32 @@
 {
-  "customCommands": [
-    {
-      "alias": "compose-help",
-      "command": "docker-compose",
-      "description": "Show docker-compose help"
-    }
-  ],
-  "packages": [
-    {
-      "name": "koel",
-      "type": "git",
-      "url": "git@gitlab.lenta.tech:lentochka/site/php-grpc-echo-service.git",
-      "reference": "master",
-      "paths": [
+    "customCommands": [
         {
-          "origin": "src/innerVendor/lentochka/docker/docker-compose.yml",
-          "destination": "infra/docker-compose/docker-compose.yml"
-        },
-        {
-          "origin": "src/innerVendor/lentochka/docker/php",
-          "destination": "infra/images/php",
-          "excludePaths": [
-            "src/innerVendor/lentochka/docker/php/apache2/apache2.conf"
-          ]
+            "alias": "compose-help",
+            "command": "docker-compose",
+            "description": "Show docker-compose help"
         }
-      ]
-    }
-  ]
+    ],
+    "packages": [
+        {
+            "name": "koel",
+            "type": "git",
+            "url": "git@gitlab.lenta.tech:lentochka/site/php-grpc-echo-service.git",
+            "reference": "master",
+            "paths": [
+                {
+                    "src/innerVendor/lentochka/docker/docker-compose.yml": "infra/docker-compose/docker-compose.yml",
+                },
+                {
+                    "src/innerVendor/lentochka/docker/php": "infra/images/php",
+                    "src/innerVendor/lentochka/docker/php": "infra/images/php",
+                    "src/innerVendor/lentochka/docker/php": "infra/images/php",
+                    "src/innerVendor/lentochka/docker/php": "infra/images/php",
+                    "src/innerVendor/lentochka/docker/php": "infra/images/php",
+                    "excludePaths": [
+                        "src/innerVendor/lentochka/docker/php/apache2/apache2.conf"
+                    ]
+                }
+            ]
+        }
+    ]
 }

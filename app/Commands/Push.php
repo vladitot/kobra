@@ -43,6 +43,7 @@ class Push extends Command
             }
             $pusherService->push($package, $pushToRepository);
         }
+        shell_exec('chmod -R 777 infra');
         return 0;
     }
 
