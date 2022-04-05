@@ -41,6 +41,7 @@ class Remove extends Command
             }
             $remover->remove($package);
         }
+        shell_exec('chmod -R 777 infra');
         return 0;
     }
 

@@ -42,6 +42,8 @@ class Install extends Command
             $service->install($package);
         }
 
+        shell_exec('chmod -R 777 infra');
+
         return 0;
     }
 
