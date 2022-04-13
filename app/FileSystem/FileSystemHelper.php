@@ -141,7 +141,7 @@ class FileSystemHelper
 
     public function getDirectoryNameByPackageName(string $packageName): string
     {
-        return $_SERVER['HOME'] . DIRECTORY_SEPARATOR . $packageName;
+        return $_SERVER['HOME'] . DIRECTORY_SEPARATOR . 'kobra' . DIRECTORY_SEPARATOR . $packageName;
     }
 
 
