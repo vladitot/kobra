@@ -19,7 +19,6 @@ class GitService
 
     public function clone(string $gitUrl, string $packageName) {
         shell_exec('mkdir -p '.$this->helper->getDirectoryNameByPackageName($packageName));
-
         $cmd = 'git clone '.$gitUrl.' '.$this->helper->getDirectoryNameByPackageName($packageName);
         $process = new Process(explode(' ', $cmd));
         $process->run();

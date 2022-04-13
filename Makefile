@@ -27,6 +27,10 @@ build-local-kobra:
 	cd infra/images/php8.1 && $(DOCKER) build --target phar -t local/kobra-dev .
 	rm -rf infra/images/php8.1/kobra
 
+build-macos-local:
+	php kobra app:build --build-version='1'
+	sudo cp builds/kobra /usr/local/bin/kobra
+
 push-vladitot:
 	$(DOCKER) tag local/kobra-dev vladitot/kobra:$(VERSION)
 	$(DOCKER) push vladitot/kobra:$(VERSION)
