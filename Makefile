@@ -45,3 +45,10 @@ build-latest:
 show-alias:
 	@echo "alias kobra-update=\"$(DOCKER) pull vladitot/kobra:latest"
 	@echo "alias kobra=\"$(DOCKER) run --rm -it -v \`pwd\`/:/var/www:ro -v \`pwd\`/infra/:/var/www/infra -v ~/.ssh/id_rsa:/tmp/.ssh/id_rsa:ro vladitot/kobra\""
+
+kobra-dev-command:
+	echo alias kobra-dev=\"php $(shell pwd)/kobra\"
+
+local-build:
+	php ./kobra app:build --build-version='1'
+	sudo mv builds/kobra /usr/local/bin/kobra

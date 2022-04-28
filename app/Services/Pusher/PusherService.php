@@ -32,7 +32,7 @@ class PusherService
             return;
         }
         $this->gitService->clone($package->url, $package->name);
-        $this->gitService->checkout($package->reference, $package->name);
+        $this->gitService->checkout($package->pushReference, $package->name);
         $allDestinationFiles = $this->fileListHelper->getDestinationFilesArray($package);
         $destinationFilesKeyedByOrigin = $this->fileListHelper
             ->convertDestinationFilesToCombined($allDestinationFiles, $package);
@@ -50,7 +50,7 @@ class PusherService
         );
 
         if ($pushToRepository) {
-            $this->gitService->pushPackageToRepository($package->name, $package->reference);
+            $this->gitService->pushPackageToRepository($package->name, $package->pushReference);
         }
     }
 }

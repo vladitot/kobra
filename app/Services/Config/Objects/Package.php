@@ -9,7 +9,8 @@ class Package
     public string $name;
     public string $type;
     public string $url;
-    public string $reference;
+    public string $installReference;
+    public string $pushReference;
     /** @var Collection|Path[] */
     public Collection $paths;
 

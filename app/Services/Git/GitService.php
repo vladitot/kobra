@@ -67,7 +67,12 @@ class GitService
             $repo->execute('reset', '--hard', $originWhere);
         } else {
             $repo->checkout('master');
-            $repo->createBranch($where, true);
+            try {
+                $repo->createBranch($where, true);
+            } catch (\Throwable $exception) {
+                $repo->checkout($where);
+                $repo->execute('reset', '--hard', 'master');
+            }
         }
     }
 
@@ -79,7 +84,7 @@ class GitService
         $repo = $this->gitManager->open($this->helper->getDirectoryNameByPackageName($packageName));
         $repo->addAllChanges();
         $repo->commit("automated kobra push");
-        $repo->push('origin', [$where]);
+        $repo->push('origin', [$where, '--force']);
     }
 
 }

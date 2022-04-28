@@ -41,7 +41,8 @@ class ConfigService
     {
         $package = new Package();
         $package->name = $packageArray['name'];
-        $package->reference = $packageArray['reference'];
+        $package->installReference = $packageArray['install-reference'];
+        $package->pushReference = $packageArray['push-reference'];
         $package->type = $packageArray['type'];
         $package->url = $packageArray['url'];
         foreach ($packageArray['paths'] as $destinationPack) {

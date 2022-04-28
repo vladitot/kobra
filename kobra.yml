@@ -2,7 +2,8 @@ packages:
   - name: koel
     type: git
     url: git@gitlab.lenta.tech:lentochka/site/php-grpc-echo-service.git
-    reference: master
+    install-reference: master
+    push-reference: kobra-from-assguard-back-update
     paths:
       - src/innerVendor/lentochka/docker/docker-compose.yml: infra/docker-compose/docker-compose.yml
 #        src/innerVendor/lentochka/docker/docker-compose1.yml: infra/docker-compose/docker-compose1.yml

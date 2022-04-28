@@ -33,7 +33,7 @@ class InstallerService
     private function runGit(Package $package)
     {
         $this->gitService->clone($package->url, $package->name);
-        $this->gitService->checkout($package->reference, $package->name);
+        $this->gitService->checkout($package->installReference, $package->name);
         $originFiles = $this->fileListHelper->getOriginFilesArray($package);
         $originToDestinationFileList = $this->fileListHelper->convertOriginFilesToCombinedPathList($package, $originFiles);
         $this->fileSystemHelper->copyFilesFromKeyToValue(
