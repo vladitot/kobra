@@ -3,6 +3,7 @@
 namespace App\Services\Git;
 
 use App\FileSystem\FileSystemHelper;
+use CzProject\GitPhp\GitException;
 use Symfony\Component\Process\Process;
 
 class GitService
@@ -83,7 +84,14 @@ class GitService
     {
         $repo = $this->gitManager->open($this->helper->getDirectoryNameByPackageName($packageName));
         $repo->addAllChanges();
-        $repo->commit("automated kobra push");
+        try {
+            $repo->commit("automated kobra push");
+        } catch (GitException $e) {
+            if ($e->getRunnerResult()->getOutput()[1]=='nothing to commit, working tree clean') {
+                echo "nothing to commit, working tree clean\n";
+            }
+        }
+
         $repo->push('origin', [$where, '--force']);
     }
 
