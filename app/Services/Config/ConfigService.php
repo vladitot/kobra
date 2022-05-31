@@ -46,12 +46,12 @@ class ConfigService
         $package->type = $packageArray['type'];
         $package->url = $packageArray['url'];
         foreach ($packageArray['paths'] as $destinationPack) {
-            foreach ($destinationPack as $originLeft=>$destinationRight) {
+            foreach ($destinationPack as $destinationLeft=>$originRight) {
                 $path = new Path();
-                if ($originLeft == 'excludePaths') continue;
+                if ($destinationLeft == 'excludePaths') continue;
                 $path->excludePaths = $destinationPack['excludePaths'] ?? [];
-                $path->destination = $destinationRight;
-                $path->origin = $originLeft;
+                $path->destination = $destinationLeft;
+                $path->origin = $originRight;
                 $package->addPath($path);
             }
         }
